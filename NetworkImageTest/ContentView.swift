@@ -20,35 +20,33 @@ struct ContentView: View {
     var body: some View {
 
         ZStack {
-            
-            Color(.black)
-                .ignoresSafeArea(.all)
 
-            KFImage.url(URL(string: "\(imgURL)h"), cacheKey: imgURL)
-                .placeholder({ progress in
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                })
-                .onSuccess({ result in
-                    print("Image Load Complete")
-                    hasFailed = false
-                })
-                .onFailure({ error in
-                    print("Failed To Load From URL")
-                    print("Before -> \(hasFailed)")
-                    hasFailed = true
-                    print("After -> \(hasFailed)")
-                })
-                .fade(duration: 0.5)
-                .retry(maxCount: 1)
-                .cancelOnDisappear(true)
-                .cacheOriginalImage(true)
-                .waitForCache(true)
-                .fromMemoryCacheOrRefresh(true)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            if(!hasFailed) {
 
-            if(hasFailed) {
+                KFImage.url(URL(string: "\(imgURL)"), cacheKey: imgURL)
+                    .placeholder({ progress in
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    })
+                    .onSuccess({ result in
+                        print("Image Load Complete")
+                        hasFailed = false
+                    })
+                    .onFailure({ error in
+                        print("Failed To Load From URL")
+                        print("Before -> \(hasFailed)")
+                        hasFailed = true
+                        print("After -> \(hasFailed)")
+                    })
+                    .fade(duration: 1.0)
+                    .retry(maxCount: 1)
+                    .cancelOnDisappear(true)
+                    .cacheOriginalImage(true)
+                    .waitForCache(true)
+                    .fromMemoryCacheOrRefresh(true)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else {
 
                 Image(systemName: defaultImg)
                     .resizable()
